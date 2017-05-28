@@ -34,3 +34,5 @@ const names = {
 };
 
 module.exports.data = names;
+
+module.exports.process = tools.obfuscators[0].process;

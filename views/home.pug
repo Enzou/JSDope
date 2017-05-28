@@ -1,7 +1,7 @@
 extends layouts/main
 
 
-// check and list entries in list of available tools. If there are none, an error message is shown
+//- check and list entries in list of available tools. If there are none, an error message is shown
 mixin obf_list(lst, name)
     if lst && lst.length
         ul(id="#{name}" class="obf_list")
@@ -18,3 +18,5 @@ block content
 
     +obf_list(obfuscators, 'obfuscators')
     +obf_list(deobfuscators, 'deobfuscators')
+
+    input(type='button', value='Send request', onclick='processFn()')
