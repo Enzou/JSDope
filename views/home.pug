@@ -1,16 +1,20 @@
 extends layouts/main
 
+
+// check and list entries in list of available tools. If there are none, an error message is shown
+mixin obf_list(lst, name)
+    if lst && lst.length
+        ul(id="#{name}" class="obf_list")
+            each tool in lst
+                li
+                    label #[input(type="checkbox")] #{tool}
+    else
+        p No #{name} available
+
+
 block content
     h1= title
     p Welcome to #{title}, #{name}
 
-
-    ul(id=obfuscators class=obf_list)
-        each obf in obfuscators
-            li
-                label #[input(type="checkbox")] #{obf}
-
-    ul(class=obf_list)
-        each deobf in deobfuscators
-            li
-                label #[input(type="checkbox")] #{deobf}
+    +obf_list(obfuscators, 'obfuscators')
+    +obf_list(deobfuscators, 'deobfuscators')

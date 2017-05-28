@@ -10,6 +10,7 @@
     "express": "~4.15.2",
     "morgan": "~1.8.1",
     "node-sass-middleware": "0.9.8",
-    "pug": "latest"
+    "pug": "latest",
+    "glob": "latest"
   }
 }
