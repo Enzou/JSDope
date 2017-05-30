@@ -11,6 +11,7 @@
     "morgan": "~1.8.1",
     "node-sass-middleware": "0.9.8",
     "pug": "latest",
-    "glob": "latest"
+    "glob": "latest",
+    "body-parser": "latest"
   }
 }
