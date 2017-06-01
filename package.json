@@ -6,13 +6,15 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "body-parser": "latest",
+    "cheerio": "^1.0.0-rc.1",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "glob": "latest",
     "morgan": "~1.8.1",
     "node-sass-middleware": "0.9.8",
     "pug": "latest",
-    "glob": "latest",
-    "body-parser": "latest"
+    "request": "latest",
+    "request-promise-native": "^1.0.4"
   }
 }
-

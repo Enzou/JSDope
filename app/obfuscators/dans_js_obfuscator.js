@@ -1,9 +1,9 @@
 // let http = require("http");
-let request = require('request');
+const request = require('request-promise-native');
+const cheerio = require('cheerio');
 
 
-
-let options = {
+let toolOptions = {
     encodings: {        // values for the encoding types are read from the website
         'None': "0",
         'Numeric': "10",
@@ -16,33 +16,65 @@ let options = {
 
 
 
-function send_request() {
-    let params = {
+function send_request(params) {
+    let options = {
         url: 'http://www.danstools.com/javascript-obfuscate/index.php',
-        // method: 'POST',
-        // headers: {
-        // }
-        form: {
-            "ascii_encoding": options.encodings.Normal,
-            "fast_decode": "on",
-            "special_char": "on",
-            "src": '//+create+a+new+request+objectvar+httpRequest+=+new+XMLHttpRequest();//+set+a+handler+function,+which+will+be+called+as+soon+as+the+response+arrives+(or+times+out)httpRequest.onreadystatechange+=+function()+{++++//+the+request+has+been+answered++++if+(httpRequest.readyState+===+XMLHttpRequest.DONE)+{++++++++//+200+is+HTTP+status+code+for+OK++++++++if+(httpRequest.status+===+200)+{++++++++++++alert(httpRequest.responseText);++++++++}+else+{++++//+the+request+failed+for+whatever+reason++++++++++++alert(\'There+was+a+problem+with+the+request.\');++++++++}++++}};//+set+the+request+method+and+the+URL+which+should+be+calledhttpRequest.open(\'GET\',+\'getData\');//+send+the+request+to+the+serverhttpRequest.send();'
-        }
+        method: 'POST',
+        transform: parseResult,
+        form: params
     };
 
-    request.post(params, (err, resp, body) => {
-        var a = 5;
-    });
-
+    return request(options);
+        // .then((content) => {      // if extra work needs to be done before the obfuscated code is returned
+        // });
 }
 
-function process(data) {
-    send_request();
+function parseResult(htmlResponse) {
+    const $ = cheerio.load(htmlResponse);
 
-    console.log('Processing of data not yet implemented!');
+    // parse information about the processing
+    let par = $('p.success');
+
+    // TODO gierlma: parse result information
+    let compression = 'n/a';
+    let time = 'n/a';
+    /*
+    if (par.length > 0) {
+        let children = par[0].children;
+        compression = children[2];
+        time = children[4];
+    }
+    a = 5;*/
+    let meta = {
+        compressionRate: compression,
+        time: time
+    };
 
     return {
-        result: null,
+        code: $("#packed").val(),
+        info: meta
+    };
+}
+
+async function process(code, options) {
+    let params = {
+        "ascii_encoding": toolOptions.encodings.Normal,
+        // "fast_decode": "on",
+        // "special_char": "on",
+        "src": code
+    };
+
+    if (options['fastDecode']) {
+        params['fast_decode'] = "on"
+    }
+    if (options['specialChar']) {
+        params['special_char'] = "on"
+    }
+
+    let result = await send_request(params);
+
+    return {
+        code: result['code'],
         time: 0,
         compressionRate: 1
     }
@@ -53,6 +85,6 @@ function process(data) {
 
 module.exports = {
     name: "Dan's JavaScript Obfuscator",
-    options: options,
+    options: toolOptions,
     process: process
 };

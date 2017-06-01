@@ -1,4 +1,27 @@
 
+const sample = `function makeRequest(url) {
+    // wrap the AJAX request in a promise, so the caller can handle the
+    // response as he wishes
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        let method = 'GET';
+
+        xhr.open(method, url);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // call the handle function if the request was a success
+                    resolve(xhr.responseURL);
+                } else {
+                    reject(xhr.responseText);
+                }
+            }
+        };
+
+        xhr.send();
+    });
+}`;
+
 function processFn() {
     let ajax = new XMLHttpRequest();
 
@@ -17,7 +40,7 @@ function processFn() {
 
     // set the request method and the URL which should be called
     ajax.open('POST', '/');
+    ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 // send the request to the server
-    ajax.send();
-    console.log('clicked!')
+    ajax.send('code='+encodeURIComponent(sample));
 }
