@@ -19,10 +19,10 @@ let options = {
 function send_request() {
     let params = {
         url: 'http://www.danstools.com/javascript-obfuscate/index.php',
-        method: 'POST',
+        // method: 'POST',
         // headers: {
         // }
-        qs: {
+        form: {
             "ascii_encoding": options.encodings.Normal,
             "fast_decode": "on",
             "special_char": "on",
@@ -30,8 +30,8 @@ function send_request() {
         }
     };
 
-    request(params, (err, resp, body) => {
-        a = 5;
+    request.post(params, (err, resp, body) => {
+        var a = 5;
     });
 
 }
