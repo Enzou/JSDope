@@ -1,7 +1,7 @@
-if lst && lst.length
+if lst && Object.keys(lst).length
     ul(id=prefix + "_list" class="tool_list")
         each tool in lst
-            li(id=prefix + "_" + tool.id)
-                label #[input(type="checkbox")] #{tool.name}
+            li
+                label #[input(type="checkbox" name=prefix + "_sel" id=prefix + "_" + tool.id)] #{tool.name}
 else
     p No data available
