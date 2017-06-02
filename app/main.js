@@ -9,9 +9,12 @@ function loadModules(modPath)  {
     }
 
     let modules = [];
+    let counter = 1;
     glob.sync(modPath).forEach((f) => {
         // TODO do a sanity check if all necessary properties are present on the module
-        modules.push(require(f));
+        var mod = require(f);
+        mod["id"] = counter++;
+        modules.push(mod);
     });
 
     return modules;
@@ -23,16 +26,4 @@ const tools = {
     deobfuscators: loadModules('./deobfuscators/*.js')
 };
 
-// const data = {
-//     obfuscators: ['Dan\'s JS Obfuscator', 'YUI Compressor', 'JavaScript Obfuscator', 'JS Obfuscator for Node.js', 'JavaScript2Image', 'JJEncode'],
-//     deobfuscators: ['JSBeautifier', 'Kahu Security\s Revelo', 'JavaScript Debofuscator Firefox Add-On', 'Honeybadger', 'JSDetox']
-// };
-
-const names = {
-    obfuscators: tools.obfuscators.map((o) => { return o.name; }),
-    deobfuscators: tools.deobfuscators.map((o) => { return o.name; })
-};
-
-module.exports.data = names;
-
-module.exports.process = tools.obfuscators[0].process;
+module.exports.tools = tools;

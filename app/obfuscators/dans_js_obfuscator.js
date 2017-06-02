@@ -8,7 +8,8 @@ let toolOptions = {
         'None': "0",
         'Numeric': "10",
         'Normal': "62",
-        'High ASCII': "95"
+        'High ASCII': "95",
+        _default: 'Normal'
     },
     fastDecode: true,
     specialChars: false

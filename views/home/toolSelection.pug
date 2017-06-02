@@ -1,0 +1,7 @@
+if lst && lst.length
+    ul(id=prefix + "_list" class="tool_list")
+        each tool in lst
+            li(id=prefix + "_" + tool.id)
+                label #[input(type="checkbox")] #{tool.name}
+else
+    p No data available

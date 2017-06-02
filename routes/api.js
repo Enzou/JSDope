@@ -20,4 +20,9 @@ router.post('/', function(req, res, next) {
 });
 
 
+router.get('/tools', (req, res, next) => {
+    res.json(app.tools);
+});
+
+
 module.exports = router;

@@ -1,25 +1,20 @@
-extends layouts/main
+extends ../layouts/main
 
 
 //- check and list entries in list of available tools. If there are none, an error message is shown
-mixin obf_list(lst, name)
-    if lst && lst.length
-        ul(id="#{name}" class="obf_list")
-            each tool in lst
-                li
-                    label #[input(type="checkbox")] #{tool}
-    else
-        p No #{name} available
+mixin obf_list(lst, prefix)
+    include toolSelection
 
 
 block content
     h1= title
-    p Welcome to #{title}, #{name}
 
-    +obf_list(obfuscators, 'obfuscators')
-    +obf_list(deobfuscators, 'deobfuscators')
+    include sampleCode
 
-    input(type='button', value='Send request', class="btn btn-primary", onclick='processFn()')
+    +obf_list(obfuscators, 'obf')
+    +obf_list(deobfuscators, 'deobf')
+
+    input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary")
 
     div(id="result_area")
         h3 Result

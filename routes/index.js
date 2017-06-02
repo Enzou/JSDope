@@ -5,11 +5,11 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('home', {
+    res.render('home/home', {
         title: 'JavaScript Deobufscator',
         name: 'SIB',
-        obfuscators: app.data.obfuscators,
-        deobfuscators: app.data.deobfuscators,
+        obfuscators: app.tools.obfuscators,
+        deobfuscators: app.tools.deobfuscators,
     });
 });
 
