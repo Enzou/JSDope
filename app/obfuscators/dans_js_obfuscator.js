@@ -34,33 +34,33 @@ function parseResult(htmlResponse) {
 
     // parse information about the processing
     let par = $('p.success');
-
-    // TODO gierlma: parse result information
     let compression = 'n/a';
     let time = 'n/a';
-    /*
+
+    // extract content about compression and duration from the paragraph
     if (par.length > 0) {
-        let children = par[0].children;
-        compression = children[2];
-        time = children[4];
+        par[0].children.forEach((el) => {
+            if (el.type === "text") {
+                if (el.data.includes("Compression")) {      // compression information
+                    let idx = el.data.indexOf(":");
+                    compression = el.data.substr(idx + 1).trim();
+                } else if(el.data.includes("Performed")) {  // time information
+                    time = el.data.replace("Performed in", "").trim();
+                }
+            }
+        });
     }
-    a = 5;*/
-    let meta = {
-        compressionRate: compression,
-        time: time
-    };
 
     return {
         code: $("#packed").val(),
-        info: meta
+        compressionRate: compression,
+        time: time
     };
 }
 
 async function process(code, options) {
     let params = {
         "ascii_encoding": toolOptions.encodings.Normal,
-        // "fast_decode": "on",
-        // "special_char": "on",
         "src": code
     };
 
@@ -74,13 +74,11 @@ async function process(code, options) {
     let result = await send_request(params);
 
     return {
-        code: result['code'],
-        time: 0,
-        compressionRate: 1
+        code: result.code,
+        compressionRate: result.compressionRate,
+        time: result.time
     }
 }
-
-
 
 
 module.exports = {

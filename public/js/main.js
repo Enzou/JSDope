@@ -31,7 +31,7 @@ function processFn() {
 
             // 200 is HTTP status code for OK
             if (ajax.status === 200) {
-                console.log(ajax.responseText);
+                showResults(JSON.parse(ajax.responseText));
             } else {    // the request failed for whatever reason
                 console.log('There was a problem with the request.');
             }
@@ -39,8 +39,23 @@ function processFn() {
     };
 
     // set the request method and the URL which should be called
-    ajax.open('POST', '/');
+    ajax.open('POST', '/api');
     ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 // send the request to the server
     ajax.send('code='+encodeURIComponent(sample));
+}
+
+function showResults(result) {
+    let resultBox = document.getElementById("result_area");
+    resultBox.style.display = "block";      // make display box visible
+
+    // let codeBox = document.getElementById("obfuscated_code");
+    let codeBox = resultBox.querySelector("#obfuscated_code");
+    codeBox.innerHTML = result.code;
+
+    let comprEl = resultBox.querySelector("#compression");
+    comprEl.innerHTML = result.compressionRate;
+
+    let timeEl = resultBox.querySelector("#time");
+    timeEl.innerHTML = result.time;
 }

@@ -10,3 +10,18 @@ a {
 ul {
   list-style-type: none;
 }
+
+#result_area {
+  display: none;
+
+  #obfuscated_code {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  .result_info {
+    margin-left: 3px;
+  }
+}
+
