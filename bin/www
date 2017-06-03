@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-const app = require('../app');
+const app = require('../server');
 const debug = require('debug')('javascript-de-obfuscation:server');
 const http = require('http');
 

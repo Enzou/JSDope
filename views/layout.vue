@@ -1,3 +1,4 @@
+<template lang="pug">
 doctype html
 html
     head
@@ -6,6 +7,15 @@ html
         link(rel="stylesheet" href="/css/bootstrap.min.css")
         script(src='/js/context.js')
         script(src='/js/main.js')
+        script(src='https://unpkg.com/vue')
 
     body
-        block content
+        | {{{app}}}
+        | {{{script}}}
+</template>
+
+<script>
+</script>
+
+<style>
+</style>

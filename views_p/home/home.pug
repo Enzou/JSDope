@@ -1,0 +1,37 @@
+extends ../layouts/main
+
+
+//- check and list entries in list of available tools. If there are none, an error message is shown
+mixin obf_list(lst, prefix)
+    include toolSelection
+
+
+block content
+    div(id="app")
+        h1= title
+
+        include sampleCode
+
+        +obf_list(obfuscators, 'obf')
+        +obf_list(deobfuscators, 'deobf')
+
+        input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary")
+
+        div(id="result_area")
+            h3 Result
+
+            p(id="obfuscated_code")
+
+            label(for="compression") Kompressionsrate:
+            span(id="compression", class="result_info")
+            br
+            label(for="time") benötigte Zeit:
+            span(id="time", class="result_info")
+
+
+        //- div
+           //-  table
+              //-   thead
+                 //-    tr: th Tool
+                //- tbody
+                   //-  tr test

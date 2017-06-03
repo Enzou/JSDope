@@ -5,11 +5,22 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('home/home', {
-        title: 'JavaScript Deobufscator',
-        name: 'SIB',
-        obfuscators: app.tools.obfuscators,
-        deobfuscators: app.tools.deobfuscators,
+    res.render('main/main', {
+        data: {
+            title: 'JavaScript Deobfuscator',
+            obfuscators: app.tools.obfuscators,
+            deobfuscators: app.tools.deobfuscators
+        },
+        vue: {
+            head: {
+                title: 'JavaScript Deobfuscator',
+                head: [
+                    {property: 'og:title', content: 'Page Title'},
+                    {name: 'twitter:title', content: 'Page Title'},
+                ]
+            },
+            components: ['toolSelector']
+        }
     });
 });
 

@@ -1,0 +1,9 @@
+if lst && Object.keys(lst).length
+    ul(id=prefix + "_list" class="tool_list")
+        li(v-for="tool in tools")
+            <label><input type="checkbox" name={{prefix + "_sel" }} id = "prefix + "_" + {{tool.id}}/>{{tool.name}}</label>
+        //each tool in lst
+        //    li
+        //        label #[input(type="checkbox" name=prefix + "_sel" id=prefix + "_" + tool.id)] #{tool.name}
+else
+    p No data available
