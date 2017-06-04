@@ -9,12 +9,11 @@ let toolOptions = {
         'Numeric': "10",
         'Normal': "62",
         'High ASCII': "95",
-        _default: 'Normal'
+        _selected: 'Normal'
     },
     fastDecode: true,
     specialChars: false
 };
-
 
 
 function send_request(params) {
@@ -61,7 +60,7 @@ function parseResult(htmlResponse) {
 
 async function process(code, options) {
     let params = {
-        "ascii_encoding": toolOptions.encodings.Normal,
+        "ascii_encoding": toolOptions.encodings[options.encodings._selected],
         "src": code
     };
 
@@ -85,5 +84,6 @@ async function process(code, options) {
 module.exports = {
     name: "Dan's JavaScript Obfuscator",
     options: toolOptions,
-    process: process
+    process: process,
+    // optionsTemplate: optionsTemplate.replace('\n', '')
 };
