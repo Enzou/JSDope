@@ -3,7 +3,6 @@ div(class="tool-selector")
     h3 Select {{toolTitle}}
     ul(v-if="tools && Object.keys(tools) > 0" v-bind:id="prefix + '_list'" class="tool-list")
         li(v-for="t in tools")
-            p {{ JSON.stringify(t.isSelected) }}
             label
                 input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" @click="toggleSelection(t.id)")
                 | {{t.name}}
@@ -50,6 +49,7 @@ div(class="tool-selector")
             // handler for (de-)selection tools
             toggleSelection (id) {
                 this.tools[id].isSelected = !this.tools[id].isSelected;
+                console.log('Tool ' + id + ' is now ' + (this.tools[id].isSelected ? '' : ' NOT ') + 'selected');
             },
             getOptionDescr: getOptionDescriptions,
             getType: function(tId, opt) {

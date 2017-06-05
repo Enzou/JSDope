@@ -1,24 +1,43 @@
 const glob = require('glob');
 const path = require('path');
-
+const fs = require('fs');
 
 // import all modules, which match a certain pattern
-function loadModules(modPath)  {
-    if (modPath.startsWith('./')) {
-        modPath = path.join(__dirname, modPath.replace('.', ''));
+function loadTools(toolsPath)  {
+    if (toolsPath.startsWith('./')) {
+        toolsPath = path.join(__dirname, toolsPath.replace('.', ''));
     }
 
     let modules = {};
     let counter = 1;
-    glob.sync(modPath).forEach((f) => {
+    glob.sync(toolsPath).forEach((f) => {
         // TODO do a sanity check if all necessary properties are present on the module
         var mod = require(f);
         mod["id"] = counter;
-        // modules.push(mod);
         modules[counter++] = mod;
     });
 
     return modules;
+}
+
+function loadSamples(samplesPath) {
+    if (samplesPath.startsWith('./')) {
+        samplesPath = path.join(__dirname, samplesPath.replace('.', ''));
+    }
+
+    let samples = {};
+    let counter = 1;
+    glob.sync(samplesPath).forEach((f) => {
+        let content = fs.readFileSync(f, 'utf-8');
+        var sample = {
+            id: counter,
+            name: path.basename(f).replace(".js", ""),
+            content: content
+        };
+        samples[counter++] = sample;
+    });
+
+    return samples;
 }
 
 function obfuscate(id, code, options) {
@@ -27,9 +46,13 @@ function obfuscate(id, code, options) {
 
 
 const tools = {
-    obfuscators: loadModules('./obfuscators/*.js'),
-    deobfuscators: loadModules('./deobfuscators/*.js')
 };
 
-module.exports.tools = tools;
-module.exports.obfuscate = obfuscate;
+module.exports = {
+    tools: {
+        obfuscators: loadTools('./obfuscators/*.js'),
+        deobfuscators: loadTools('./deobfuscators/*.js')
+    },
+    samples: loadSamples('./samples/*.js'),
+    obfuscate
+};

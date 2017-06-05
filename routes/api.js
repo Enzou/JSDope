@@ -6,22 +6,12 @@ const app = require('../app/main');
 
 const router = express.Router();
 
-// router.post('/', function(req, res, next) {
-//     let params = req.body;
-//     // TODO validate parameters
-//     app.process(params.code, params.info || {})
-//         .then((result) =>  {
-//             res.json(result);
-//         })
-//         .catch((err) => {
-//             console.error(err.stack);
-//             res.send("error "+ err);
-//         })
-// });
-
-
 router.get('/tools', (req, res, next) => {
     res.json(app.tools);
+});
+
+router.get('/samples', (req, res, next) => {
+    res.json(app.samples);
 });
 
 router.post('/obfuscate', (req, res, next) => {

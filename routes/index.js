@@ -9,7 +9,8 @@ router.get('/', function(req, res, next) {
         data: {
             title: 'JavaScript Deobfuscator',
             obfuscators: app.tools.obfuscators,
-            deobfuscators: app.tools.deobfuscators
+            deobfuscators: app.tools.deobfuscators,
+            samples: app.samples
         },
         vue: {
             head: {
@@ -19,7 +20,7 @@ router.get('/', function(req, res, next) {
                     {name: 'twitter:title', content: 'Page Title'},
                 ]
             },
-            components: ['toolSelector']
+            components: ['toolSelector', 'sampleSelector']
         }
     });
 });

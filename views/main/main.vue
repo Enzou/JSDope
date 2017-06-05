@@ -1,9 +1,12 @@
 <template lang="pug">
+
 div(id="app")
-    h1 {{title2}}
+    h1 {{title}}
 
     tool-selector(:tools="obfuscators" :tool-title="'Obfuscators'" :prefix="'obf'")
     tool-selector(:tools="deobfuscators" :tool-title="'Deobfuscators'" :prefix="'deobf'")
+
+    sample-selector(:samples="samples")
 
     input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary" @click="obfuscate")
 
@@ -35,7 +38,6 @@ div(id="app")
     export default {
         data() {
             return {
-                title2: 'JavaScript Deobfuscator Comperator',
                 results: [],
             }
         },
