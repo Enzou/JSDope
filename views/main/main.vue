@@ -24,8 +24,6 @@ div(id="app")
 
 <script>
     async function obfuscate() {
-
-        debugger;
         for (let tId in this.obfuscators) {
             if (this.obfuscators.hasOwnProperty(tId)) {
                 let tool = this.obfuscators[tId];
@@ -46,7 +44,6 @@ div(id="app")
         methods: {
             obfuscate: obfuscate,
             onSampleChanged: function(sample) {
-                debugger;
                 if (Number.isInteger(sample)) { // sample Id means the whole sample is used
                     this.sampleCode = this.samples[sample].content;
                 } else if(sample instanceof String) {

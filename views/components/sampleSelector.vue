@@ -1,11 +1,11 @@
 <template lang="pug">
-div(class="sample-selector")
+div(class="sample-selector selector-container")
     h3(class="samples-header") Select Samples
-    div(class="sample-list-container")
+    div(class="sample-list-container list-container")
         ul(class="sample-list")
             li(v-for="s in samples" v-bind:class="selectedId == s.id ? 'selected' : ''" @click="selectSample(s.id)")   {{s.name}}
 
-    textarea(class="sample-content" v-model="sampleCode")
+    textarea(class="sample-content detail-container" v-model="sampleCode")
 
 </template>
 
@@ -43,27 +43,12 @@ div(class="sample-selector")
 
 
 <style>
-    .sample-selector {
-        display: flex;
-        flex-flow: row wrap;
-        align-items: stretch;
-    }
-
-    .sample-selector > * {
-        flex: 1 100%;
-        padding: 10px;
-    }
-
-    .sample-list-container {
-        flex: 0 0 200px;
-        margin: 0 10px 0 0;
+    .sample-selector .sample-list {
         padding-left: 10px;
     }
 
     .sample-content {
-        flex: 4 0;
         height: 300px;
-        margin: auto;
 
         background-color: #1f1f1f;
         color: #a0a0a0;

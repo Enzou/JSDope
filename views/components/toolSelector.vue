@@ -1,15 +1,16 @@
 <template lang="pug">
-div(class="tool-selector")
+div(class="tool-selector selector-container framed")
     h3 Select {{toolTitle}}
-    ul(v-if="tools && Object.keys(tools) > 0" v-bind:id="prefix + '_list'" class="tool-list")
-        li(v-for="t in tools")
-            label
-                input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" @click="toggleSelection(t.id)")
-                | {{t.name}}
+    div(class="tool-list-container list-container")
+        ul(v-if="tools && Object.keys(tools) > 0" v-bind:id="prefix + '_list'" class="tool-list")
+            li(v-for="t in tools")
+                label
+                    input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" @click="toggleSelection(t.id)")
+                    | {{t.name}}
 
-    p(v-else) No data available
+        p(v-else) No data available
 
-    div(class="options-box")
+    div(class="options-box detail-container")
         h4 Options
         div(class="tool_options" v-for="(t, k) in tools" v-if="t.isSelected")
             h5 {{t.name}}
@@ -22,7 +23,6 @@ div(class="tool-selector")
                     input(v-else-if="getType(t.id, k) === 'text'" type="text" v-model="tools[t.id].options[k]")
                     span(v-else="") Invalid option type for option: {{ o }}
                 br
-
 </template>
 
 
@@ -108,15 +108,11 @@ div(class="tool-selector")
 </script>
 
 <style>
-.tool-selector {
-    border: 1px solid gray;
-    border-radius: 5px;
-    padding: 2px 10px;
-}
+    .selector-container .list-container {
+        flex: 2 0;
+    }
 
-.options-box, .tool-list {
-    display: inline-block;
-    width: 50%;
-}
-
+    .options-box {
+        flex: 3 0 !important;
+    }
 </style>
