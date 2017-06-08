@@ -5,7 +5,7 @@ div(class="tool-selector selector-container framed")
         ul(v-if="tools && Object.keys(tools) > 0" v-bind:id="prefix + '_list'" class="tool-list")
             li(v-for="t in tools")
                 label
-                    input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" @click="toggleSelection(t.id)")
+                    input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" v-model="t.isSelected")
                     | {{t.name}}
 
         p(v-else) No data available
@@ -13,8 +13,6 @@ div(class="tool-selector selector-container framed")
     div(class="options-box detail-container")
         h4 Options
         div(class="tool_options" v-for="(t, k) in tools" v-if="t.isSelected")
-            h5 {{t.name}}
-
             template(v-for="(o, k) in t.options")
                 label {{ optionDescr[t.id][k].text }}:
                     select(v-if="getType(t.id, k) === 'selection'" v-model="tools[t.id].options[k]._selected")
@@ -40,22 +38,17 @@ div(class="tool-selector selector-container framed")
             for (let tId in this.tools) {
                 if (this.tools.hasOwnProperty(tId)) {
                     tool = this.tools[tId];
-                    tool.isSelected = tool.isSelected || false;     // set default value for selections
+                    tool.isSelected = tool.isSelected || true;     // set default value for selections
                     this.optionDescr[tId] = this.getOptionDescr(tool.options);
                 }
             }
         },
         methods: {
             // handler for (de-)selection tools
-            toggleSelection (id) {
-                this.tools[id].isSelected = !this.tools[id].isSelected;
-                console.log('Tool ' + id + ' is now ' + (this.tools[id].isSelected ? '' : ' NOT ') + 'selected');
-            },
             getOptionDescr: getOptionDescriptions,
             getType: function(tId, opt) {
                 return this.optionDescr[tId][opt].type;
             }
-
         }
     }
 
@@ -108,11 +101,17 @@ div(class="tool-selector selector-container framed")
 </script>
 
 <style>
-    .selector-container .list-container {
+    .tool-selector .list-container {
         flex: 2 0;
     }
 
-    .options-box {
-        flex: 3 0 !important;
+    .tool-selector .options-box {
+        flex: 3 0;
+        margin-top: -35px;
+    }
+
+    .tool-selector .options-box h4 {
+        margin-top: 0;
+        margin-bottom: 1em;
     }
 </style>
