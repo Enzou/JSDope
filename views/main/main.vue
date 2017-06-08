@@ -6,7 +6,7 @@ div(id="app")
     tool-selector(:tools="obfuscators" :tool-title="'Obfuscators'" :prefix="'obf'")
     tool-selector(:tools="deobfuscators" :tool-title="'Deobfuscators'" :prefix="'deobf'")
 
-    sample-selector(:samples="samples")
+    sample-selector(:samples="samples" @sample-changed="onSampleChanged")
 
     input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary" @click="obfuscate")
 
@@ -24,12 +24,13 @@ div(id="app")
 
 <script>
     async function obfuscate() {
+
         debugger;
         for (let tId in this.obfuscators) {
             if (this.obfuscators.hasOwnProperty(tId)) {
                 let tool = this.obfuscators[tId];
                 if (tool.isSelected) {
-                    let res = await makeRequest("/obfuscate", "POST", {id: tId, code: encodeURIComponent(sample), options: tool.options} );
+                    let res = await makeRequest("/obfuscate", "POST", {id: tId, code: encodeURIComponent(this.sampleCode), options: tool.options} );
                     this.showResults(res);
                 }
             }
@@ -38,11 +39,22 @@ div(id="app")
     export default {
         data() {
             return {
+                sampleCode: "",
                 results: [],
             }
         },
         methods: {
             obfuscate: obfuscate,
+            onSampleChanged: function(sample) {
+                debugger;
+                if (Number.isInteger(sample)) { // sample Id means the whole sample is used
+                    this.sampleCode = this.samples[sample].content;
+                } else if(sample instanceof String) {
+                    this.sampleCode = sample;
+                } else {
+                    console.error("Received invalid sample in event: " + JSON.stringify(sample));
+                }
+            },
             showResults (res) {
                 this.results.push(res);
 

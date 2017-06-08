@@ -46,13 +46,12 @@ function obfuscate(id, code, options) {
 
 
 const tools = {
-};
-
-module.exports = {
-    tools: {
         obfuscators: loadTools('./obfuscators/*.js'),
         deobfuscators: loadTools('./deobfuscators/*.js')
-    },
+    };
+
+module.exports = {
+    tools: tools,
     samples: loadSamples('./samples/*.js'),
     obfuscate
 };

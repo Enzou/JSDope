@@ -19,12 +19,23 @@ div(class="sample-selector")
                 selectedId: -1
             }
         },
+        created() {
+            let sample = null;
+            for (let sId in this.samples) {
+                if (this.samples.hasOwnProperty(sId)) {
+                    sample = this.samples[sId];
+                    sample.isSelected = sample.isSelected || false;     // set default value for selections
+                }
+            }
+        },
         methods: {
             // TODO add feature to use only selected code within the content
             selectSample: function(id) {
                 let sample = this.samples[id];
                 this.sampleCode = sample.content;
                 this.selectedId = id;
+
+                this.$emit('sample-changed', this.selectedId);
             }
         }
     }
