@@ -44,6 +44,10 @@ function obfuscate(id, code, options) {
     return tools.obfuscators[id].process(code, options);
 }
 
+function deobfuscate(id, code, options) {
+    return tools.deobfuscators[id].process(code, options);
+}
+
 
 const tools = {
         obfuscators: loadTools('./obfuscators/*.js'),
@@ -53,5 +57,6 @@ const tools = {
 module.exports = {
     tools: tools,
     samples: loadSamples('./samples/*.js'),
-    obfuscate
+    obfuscate,
+    deobfuscate
 };

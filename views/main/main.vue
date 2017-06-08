@@ -8,7 +8,8 @@ div(id="app")
 
     sample-selector(:samples="samples" @sample-changed="onSampleChanged")
 
-    input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary" @click="obfuscate")
+    input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary" @click="process.bind(obfuscators, 'obfuscate')")
+    input(id="btnDeObfuscate", type='button', value='Deobufscate', class="btn btn-primary" @click="process(deobfuscators, 'deobfuscate')")
 
     div(id="result_area")
         h3 Result
@@ -23,12 +24,12 @@ div(id="app")
 </template>
 
 <script>
-    async function obfuscate() {
-        for (let tId in this.obfuscators) {
-            if (this.obfuscators.hasOwnProperty(tId)) {
-                let tool = this.obfuscators[tId];
+    async function process(tools, cmd) {
+        for (let tId in tools) {
+            if (tools.hasOwnProperty(tId)) {
+                let tool = tools[tId];
                 if (tool.isSelected) {
-                    let res = await makeRequest("/obfuscate", "POST", {id: tId, code: encodeURIComponent(this.sampleCode), options: tool.options} );
+                    let res = await makeRequest("/process", "POST", {id: tId, code: encodeURIComponent(this.sampleCode), options: tool.options, cmd: cmd} );
                     this.showResults(res);
                 }
             }
@@ -42,7 +43,7 @@ div(id="app")
             }
         },
         methods: {
-            obfuscate: obfuscate,
+            process: process,
             onSampleChanged: function(sample) {
                 if (Number.isInteger(sample)) { // sample Id means the whole sample is used
                     this.sampleCode = this.samples[sample].content;
