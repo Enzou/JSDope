@@ -5,7 +5,7 @@ div(class="sample-selector selector-container")
         ul(class="sample-list")
             li(v-for="s in samples" v-bind:class="selectedId == s.id ? 'selected' : ''" @click="selectSample(s.id)")   {{s.name}}
 
-    textarea(class="sample-content detail-container" v-model="sampleCode")
+    textarea(class="sample-content detail-container" v-model="sampleCode" v-on:change="onCodeChanged")
 
 </template>
 
@@ -36,6 +36,10 @@ div(class="sample-selector selector-container")
                 this.selectedId = id;
 
                 this.$emit('sample-changed', this.selectedId);
+            },
+            onCodeChanged: function() {
+                this.selectedId = -1;
+                this.$emit('sample-changed', this.sampleCode);
             }
         }
     }

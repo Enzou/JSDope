@@ -11,16 +11,8 @@ div(id="app")
     input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary" @click="process.bind(obfuscators, 'obfuscate')")
     input(id="btnDeObfuscate", type='button', value='Deobufscate', class="btn btn-primary" @click="process(deobfuscators, 'deobfuscate')")
 
-    div(id="result_area")
-        h3 Result
 
-        p(id="obfuscated_code")
-
-        label(for="compression") Kompressionsrate:
-        span(id="compression", class="result_info")
-        br
-        label(for="time") benötigte Zeit:
-        span(id="time", class="result_info")
+    <!--result-overview(id="result_area" :results="results")-->
 </template>
 
 <script>
@@ -29,8 +21,13 @@ div(id="app")
             if (tools.hasOwnProperty(tId)) {
                 let tool = tools[tId];
                 if (tool.isSelected) {
-                    let res = await makeRequest("/process", "POST", {id: tId, code: encodeURIComponent(this.sampleCode), options: tool.options, cmd: cmd} );
-                    this.showResults(res);
+                    try {
+                        let res = await makeRequest("/process", "POST", {id: tId, code: encodeURIComponent(this.sampleCode), options: tool.options, cmd: cmd});
+                        this.showResults(res);
+                    } catch (exc) {
+                        console.error("Couldn't process request: " + exc.message);
+                    }
+
                 }
             }
         }
@@ -47,7 +44,7 @@ div(id="app")
             onSampleChanged: function(sample) {
                 if (Number.isInteger(sample)) { // sample Id means the whole sample is used
                     this.sampleCode = this.samples[sample].content;
-                } else if(sample instanceof String) {
+                } else if(typeof sample === 'string') {
                     this.sampleCode = sample;
                 } else {
                     console.error("Received invalid sample in event: " + JSON.stringify(sample));
