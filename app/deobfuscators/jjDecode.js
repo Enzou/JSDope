@@ -37,7 +37,7 @@ class LOTUChecker{
 }
 
 
-async function decode(encStr) {
+function decode(encStr) {
     // clean string
     encStr = encStr.replace(/^\s+|\s+$/g, "");
 
@@ -353,7 +353,30 @@ function checkPalindrome(str) {
     return { startPos, endPos, gv, gvl };
 }
 
+async function process(str) {
+    let code = "";
+    let compressionRate = "-";
+    let time = "-";
+
+    try {
+
+        code = decode(str);
+        compressionRate =  str.length + "/" + code.length + " = " + (str.length / code.length).toFixed(2);
+
+
+    } catch (exc) {
+        console.warn("Couldn't decode JJEncoded string: " + exc);
+    }
+
+   return {
+       code: code,
+       time: time,
+       compressionRate: compressionRate
+   };
+}
+
 module.exports = {
     name: 'JJDecode',
-    process: decode
+    process: process
 };
+

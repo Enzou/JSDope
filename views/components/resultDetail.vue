@@ -1,11 +1,12 @@
 <template lang="pug">
-    p(id="obfuscated_code")
+div(class="result-detail")
+    p(id="obfuscated_code") {{ result.code}}
 
     label(for="compression") Kompressionsrate:
-    span(id="compression", class="result_info")
+    span(id="compression", class="result_info") {{ result.compressionRate}}
     br
     label(for="time") benötigte Zeit:
-    span(id="time", class="result_info")
+    span(v-once id="time" class="result_info") {{result.time}}
 </template>
 
 

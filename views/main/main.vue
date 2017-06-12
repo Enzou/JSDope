@@ -8,11 +8,11 @@ div(id="app")
 
     sample-selector(:samples="samples" @sample-changed="onSampleChanged")
 
-    input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary" @click="process.bind(obfuscators, 'obfuscate')")
+    input(id="btnObfuscate", type='button', value='Send request', class="btn btn-primary" @click="process(obfuscators, 'obfuscate')")
     input(id="btnDeObfuscate", type='button', value='Deobufscate', class="btn btn-primary" @click="process(deobfuscators, 'deobfuscate')")
 
 
-    <!--result-overview(id="result_area" :results="results")-->
+    result-overview(v-if="results && results.length > 0" id="result_area" :results="results")
 </template>
 
 <script>
@@ -51,20 +51,21 @@ div(id="app")
                 }
             },
             showResults (res) {
+                console.log("Received results: " + JSON.stringify(res));
                 this.results.push(res);
 
-                let resultBox = document.getElementById("result_area");
-                resultBox.style.display = "block";      // make display box visible
-
-                // let codeBox = document.getElementById("obfuscated_code");
-                let codeBox = resultBox.querySelector("#obfuscated_code");
-                codeBox.innerHTML = res.code;
-
-                let comprEl = resultBox.querySelector("#compression");
-                comprEl.innerHTML = res.compressionRate;
-
-                let timeEl = resultBox.querySelector("#time");
-                timeEl.innerHTML = res.time;
+//                let resultBox = document.getElementById("result_area");
+//                resultBox.style.display = "block";      // make display box visible
+//
+//                // let codeBox = document.getElementById("obfuscated_code");
+//                let codeBox = resultBox.querySelector("#obfuscated_code");
+//                codeBox.innerHTML = res.code;
+//
+//                let comprEl = resultBox.querySelector("#compression");
+//                comprEl.innerHTML = res.compressionRate;
+//
+//                let timeEl = resultBox.querySelector("#time");
+//                timeEl.innerHTML = res.time;
             }
         },
 };

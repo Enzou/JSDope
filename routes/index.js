@@ -20,7 +20,7 @@ router.get('/', function(req, res, next) {
                     {name: 'twitter:title', content: 'Page Title'},
                 ]
             },
-            components: ['toolSelector', 'sampleSelector']
+            components: ['toolSelector', 'sampleSelector', 'resultOverview', 'resultDetail']
         }
     });
 });

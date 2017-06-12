@@ -2,7 +2,7 @@
 div(class="tool-selector selector-container framed")
     h3 Select {{toolTitle}}
     div(class="tool-list-container list-container")
-        ul(v-if="tools && Object.keys(tools) > 0" v-bind:id="prefix + '_list'" class="tool-list")
+        ul(v-if="tools " v-bind:id="prefix + '_list'" class="tool-list")
             li(v-for="t in tools")
                 label
                     input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" v-model="t.isSelected")
