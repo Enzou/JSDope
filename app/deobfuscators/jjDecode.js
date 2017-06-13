@@ -359,11 +359,8 @@ async function process(str) {
     let time = "-";
 
     try {
-
         code = decode(str);
         compressionRate =  str.length + "/" + code.length + " = " + (str.length / code.length).toFixed(2);
-
-
     } catch (exc) {
         console.warn("Couldn't decode JJEncoded string: " + exc);
     }

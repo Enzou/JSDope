@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
         },
         vue: {
             head: {
-                title: 'JavaScript Deobfuscator',
+                title: 'JSDope',
                 head: [
                     {property: 'og:title', content: 'Page Title'},
                     {name: 'twitter:title', content: 'Page Title'},

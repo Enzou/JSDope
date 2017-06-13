@@ -1,6 +1,6 @@
 <template lang="pug">
 div(class="result-detail")
-    p(id="obfuscated_code") {{ result.code}}
+    textarea(class="resulting_code") {{ result.code}}
 
     label(for="compression") Kompressionsrate:
     span(id="compression", class="result_info") {{ result.compressionRate}}

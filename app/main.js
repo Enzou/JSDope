@@ -12,9 +12,20 @@ function loadTools(toolsPath)  {
     let counter = 1;
     glob.sync(toolsPath).forEach((f) => {
         // TODO do a sanity check if all necessary properties are present on the module
-        var mod = require(f);
-        mod["id"] = counter;
-        modules[counter++] = mod;
+        let name = path.basename(f).replace(".js","");
+
+        try {
+            var mod = require(f);
+            if (!mod.hidden) {
+                mod["id"] = counter;
+                modules[counter++] = mod;
+            } else {
+                console.warn("Skipping module \'" + name + "\'");
+            }
+        } catch (exc) {
+            console.error("Couldn't load module \'" + name + "\': " + exc);
+        }
+
     });
 
     return modules;
@@ -32,7 +43,7 @@ function loadSamples(samplesPath) {
         var sample = {
             id: counter,
             name: path.basename(f).replace(".js", ""),
-            content: content
+            content: encodeURIComponent(content)
         };
         samples[counter++] = sample;
     });

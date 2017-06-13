@@ -32,7 +32,7 @@ div(class="sample-selector selector-container")
             // TODO add feature to use only selected code within the content
             selectSample: function(id) {
                 let sample = this.samples[id];
-                this.sampleCode = sample.content;
+                this.sampleCode = decodeURIComponent(sample.content);
                 this.selectedId = id;
 
                 this.$emit('sample-changed', this.selectedId);
