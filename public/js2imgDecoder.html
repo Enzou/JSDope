@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS2Image Decoder</title>
+
+	<style>
+		.from, .out {
+			width: 90%;
+			height: 300px;
+			margin: auto;
+		}
+	</style>
+</head>
+<body>
+    <h1>Reverse obfuscated script from Javascript2img.com</h1>
+
+		<h2>Enter your obfuscated code</h2>
+		<textarea class="from"></textarea>
+        <br>
+		<button>Reverse</button>
+
+		<h2>Result</h2>
+		<textarea class="out"></textarea>
+	</body>
+	<script>
+		document.querySelector('button').addEventListener('click', function(){
+			function Function(a, b){
+			    console.log("Function(" + a + ", " + b + ")");
+				return function(c){
+				    if (b) {
+				        return window.Function(a,b)(c)
+					} else {
+				        return (document.querySelector('.out').value = a);
+					}
+				};
+			}
+            console.log(" ---- start decoding ---- ");
+			eval(document.querySelector('.from').value);
+		}, false);
+	</script>
+</body>
+</html>
