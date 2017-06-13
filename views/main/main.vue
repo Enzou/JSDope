@@ -8,7 +8,12 @@ div(id="app")
 
     sample-selector(:samples="samples" @sample-changed="onSampleChanged")
 
-    input(id="btnProcess", type='button', value='Process', class="btn primary-btn" @click="process")
+    input(id="btnProcess" type='button' value='Process' class="btn primary-btn" @click="process")
+
+    template(v-if="canCrossProcess()")
+        label
+            input(type="checkbox" v-model="isCrossProcess")
+            | Process every obfuscator output as deobfuscator input
 
     result-overview(v-if="results && results.length > 0" id="result_area" :results="results")
 </template>
@@ -22,11 +27,10 @@ div(id="app")
                     if (tool.isSelected) {
                         try {
                             let res = await makeRequest("/process", "POST", {id: tId, code: this.sampleCode, options: tool.options, cmd: cmd});
-                            this.showResults(res);
+                            this.showResults(res, tool);
                         } catch (exc) {
                             console.error("Couldn't process request: " + exc.message);
                         }
-
                     }
                 }
             }
@@ -38,7 +42,7 @@ div(id="app")
             await processTools.call(this, this.obfuscators, 'obfuscate');
             await processTools.call(this, this.deobfuscators, 'deobfuscate');
         } catch (exc) {
-            console.error("Coudln't send request: " + exc);
+            console.error("Couldn't send request: " + exc);
         }
     }
 
@@ -47,11 +51,11 @@ div(id="app")
             return {
                 sampleCode: "",
                 results: [],
+                isCrossProcess: false
             }
         },
         methods: {
             process: process,
-            process2: process2,
             onSampleChanged: function(sample) {
                 if (Number.isInteger(sample)) { // sample Id means the whole sample is used
                     this.sampleCode = this.samples[sample].content;
@@ -61,21 +65,21 @@ div(id="app")
                     console.error("Received invalid sample in event: " + JSON.stringify(sample));
                 }
             },
-            showResults (res) {
-                this.results.push(res);
-
-//                let resultBox = document.getElementById("result_area");
-//                resultBox.style.display = "block";      // make display box visible
-//
-//                // let codeBox = document.getElementById("obfuscated_code");
-//                let codeBox = resultBox.querySelector("#obfuscated_code");
-//                codeBox.innerHTML = res.code;
-//
-//                let comprEl = resultBox.querySelector("#compression");
-//                comprEl.innerHTML = res.compressionRate;
-//
-//                let timeEl = resultBox.querySelector("#time");
-//                timeEl.innerHTML = res.time;
+            showResults (res, tool) {
+                if (res.code) {
+                    res.toolName = tool.name;
+                    console.log("--- received result: " + JSON.stringify(res));
+                    this.results.push(res);
+                }
+            },
+            canCrossProcess() {
+                console.log(" Obfs " + JSON.stringify(this.obfuscators));
+                let isSelectedFn = (tool) => {
+                    return tool.isSelected
+                };
+//                return this.obfuscators.filter(isSelectedFn).length > 0 &&
+//                    this.deobfuscators.filter(isSelectedFn).length > 0;
+                return true;
             }
         },
 };

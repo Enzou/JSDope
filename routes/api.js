@@ -24,8 +24,8 @@ router.post('/process', (req, res, next) => {
             res.json(result);
         })
         .catch((err) => {
-            console.error(err.stack);
-            res.send("error "+ err);
+            console.error("Error during /process: " + err.stack);
+            res.send({error: JSON.stringify(err)});
         });
 
 });

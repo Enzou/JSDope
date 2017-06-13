@@ -1,5 +1,6 @@
 <template lang="pug">
 div(class="result-detail")
+    h4 {{result.toolName}}
     textarea(class="resulting_code") {{ result.code}}
 
     label(for="compression") Kompressionsrate:

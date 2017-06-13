@@ -1,11 +1,8 @@
 <template lang="pug">
 div(id="result-overview")
-    h3 Result
+    h3 Result{{results.length > 1 ? "s" : ""}}
 
-    result-detail(v-if="results.length === 1" :result="results[0]")
-
-    div(v-else="")
-        span Test
+    result-detail(v-for="res in results" :key="res.toolName" :result="res")
 </template>
 
 

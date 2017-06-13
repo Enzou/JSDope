@@ -59,7 +59,6 @@ function deobfuscate(id, code, options) {
     return tools.deobfuscators[id].process(code, options);
 }
 
-
 const tools = {
         obfuscators: loadTools('./obfuscators/*.js'),
         deobfuscators: loadTools('./deobfuscators/*.js')
