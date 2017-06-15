@@ -1303,18 +1303,22 @@ let window = {
 };
 let document = { };
 
+function report(out) {
+    out = js_beautify(out);
+    console.log('[Deobfuscate JavaScript] Output: ' + out);
+}
 DEOBEVILJS = eval;
 eval = function(input_string){return js_beautify(input_string);};
-window.eval = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-write = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-document.write = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-writeln = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-document.writeln = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-createPopup = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-window.createPopup = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-createElement = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-document.createElement = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
-appendChild = function(input_string){var out = js_beautify(input_string); document.getElementById('text').value = out;}
+window.eval = report;
+write = report;
+document.write = report;
+writeln = report;
+document.writeln = report;
+createPopup = report;
+window.createPopup = report;
+createElement = report;
+document.createElement = report;
+appendChild = report;
 
 function deobfuscate(code) {
     try {
@@ -1323,6 +1327,7 @@ function deobfuscate(code) {
         if (e instanceof SyntaxError) {
             console.error("Syntax Error:\n" + e.message);
         }
+        return "";
     }
 }
 
