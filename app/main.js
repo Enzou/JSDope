@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 // import all modules, which match a certain pattern
-function loadTools(toolsPath)  {
+function loadTools(toolsPath, type='obfuscator')  {
     if (toolsPath.startsWith('./')) {
         toolsPath = path.join(__dirname, toolsPath.replace('.', ''));
     }
@@ -17,7 +17,8 @@ function loadTools(toolsPath)  {
         try {
             var mod = require(f);
             if (!mod.hidden) {
-                mod["id"] = counter;
+                mod.id = counter;
+                mod.type = type;
                 modules[counter++] = mod;
             } else {
                 console.warn("Skipping module \'" + name + "\'");
@@ -60,8 +61,8 @@ function deobfuscate(id, code, options) {
 }
 
 const tools = {
-        obfuscators: loadTools('./obfuscators/*.js'),
-        deobfuscators: loadTools('./deobfuscators/*.js')
+        obfuscators: loadTools('./obfuscators/*.js', type='obfuscator'),
+        deobfuscators: loadTools('./deobfuscators/*.js', type='deobfuscator')
     };
 
 module.exports = {

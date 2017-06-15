@@ -10,24 +10,26 @@ div(id="app")
 
     input(id="btn-process" type='button' value='Process' class="btn primary-btn" @click="process")
 
-    template(v-if="canCrossProcess()")
-        label
+    template(v-if="canCrossProcess")
+        label(title="Use the result of every obfuscation as input for every deobfuscator")
             input(type="checkbox" v-model="isCrossProcess")
             | Process every obfuscator output as deobfuscator input
 
-    result-overview(v-if="results && results.length > 0" id="result_area" :results="results")
+    result-overview(v-if="results && results.count > 0" id="result_area" :results="results" is-cross-processed="isCrossProcess")
 </template>
 
 <script>
     async function process() {
-        let processTools = async function(tools, cmd) {
+        let processTools = async function(tools) {
             for (let tId in tools) {
                 if (tools.hasOwnProperty(tId)) {
                     let tool = tools[tId];
                     if (tool.isSelected) {
                         try {
+                            let cmd = (tool.type === "obfuscator"  ? "obfuscate" : "deobfuscate");
                             let res = await makeRequest("/process", "POST", {id: tId, code: this.sampleCode, options: tool.options, cmd: cmd});
                             this.showResults(res, tool);
+                            console.log(' --- show result ');
                         } catch (exc) {
                             console.error("Couldn't process request: " + exc.message);
                         }
@@ -37,10 +39,19 @@ div(id="app")
         };
 
         // clear previous results
-        this.results = [];
+        this.results = {
+            obfuscator: [],
+            deobfuscator: [],
+            count: 0
+        };
         try {
-            await processTools.call(this, this.obfuscators, 'obfuscate');
-            await processTools.call(this, this.deobfuscators, 'deobfuscate');
+            if (this.isCrossProcess) {
+
+            } else {    // use same sample for each tool
+                await processTools.call(this, this.deobfuscators);
+                await processTools.call(this, this.obfuscators);
+            }
+
         } catch (exc) {
             console.error("Couldn't send request: " + exc);
         }
@@ -50,8 +61,20 @@ div(id="app")
         data() {
             return {
                 sampleCode: "",
-                results: [],
+                results: { count: 0 },
                 isCrossProcess: false
+            }
+        },
+        computed: {
+            canCrossProcess() {
+                let isSelected = (tool) => {
+                    return tool.isSelected
+                };
+
+                let obfSel = Object.values(this.obfuscators).some(isSelected);
+                let deobfSel = Object.values(this.deobfuscators).some(isSelected);
+
+                return obfSel && deobfSel;
             }
         },
         methods: {
@@ -67,18 +90,15 @@ div(id="app")
             },
             showResults (res, tool) {
                 if (res.code) {
+                    res.id = (tool.type === "obfuscator" ? tool.id : tool.id + 9000);       // use id as key for sorting and list obfuscator results first
+
                     res.toolName = tool.name;
-                    this.results.push(res);
+                    res.type = tool.type;
+
+                    this.results[tool.type].push(res);
+                    this.results.count++;
                 }
             },
-            canCrossProcess() {
-                let isSelectedFn = (tool) => {
-                    return tool.isSelected
-                };
-//                return this.obfuscators.filter(isSelectedFn).length > 0 &&
-//                    this.deobfuscators.filter(isSelectedFn).length > 0;
-                return true;
-            }
         },
 };
 </script>
