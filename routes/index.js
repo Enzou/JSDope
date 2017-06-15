@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', function(req, res, next) {
     res.render('main/main', {
         data: {
-            title: 'JavaScript Deobfuscator',
+            title: 'JSDope',
             obfuscators: app.tools.obfuscators,
             deobfuscators: app.tools.deobfuscators,
             samples: app.samples

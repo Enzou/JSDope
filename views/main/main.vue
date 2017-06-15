@@ -8,7 +8,7 @@ div(id="app")
 
     sample-selector(:samples="samples" @sample-changed="onSampleChanged")
 
-    input(id="btnProcess" type='button' value='Process' class="btn primary-btn" @click="process")
+    input(id="btn-process" type='button' value='Process' class="btn primary-btn" @click="process")
 
     template(v-if="canCrossProcess()")
         label
@@ -68,12 +68,10 @@ div(id="app")
             showResults (res, tool) {
                 if (res.code) {
                     res.toolName = tool.name;
-                    console.log("--- received result: " + JSON.stringify(res));
                     this.results.push(res);
                 }
             },
             canCrossProcess() {
-                console.log(" Obfs " + JSON.stringify(this.obfuscators));
                 let isSelectedFn = (tool) => {
                     return tool.isSelected
                 };
