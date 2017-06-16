@@ -54,8 +54,6 @@ div(class="sample-selector selector-container")
     .sample-content {
         height: 300px;
 
-        background-color: #1f1f1f;
-        color: #a0a0a0;
     }
 
     .selected {

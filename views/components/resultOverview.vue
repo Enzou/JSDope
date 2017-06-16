@@ -18,7 +18,8 @@ div(id="result-overview")
                 td {{res.compressionRate}}
                 td {{ res.time }}
                 td {{ res.type.charAt(0).toUpperCase() + res.type.slice(1) }}
-                td(class="code-preview") {{ res.code }}
+                td(class="code-preview")
+                    textarea {{ res.code }}
 
     div(v-else="") No results
 </template>
