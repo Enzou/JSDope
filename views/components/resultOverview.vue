@@ -13,11 +13,11 @@ div(id="result-overview")
                 th Type
                 th Preview
         tbody
-            tr(v-for="res in sortedResults" :key="res.id")
+            tr(v-for="res in sortedResults" :key="res.id" v-bind:class="[{failed: res.failed}, 'result-entry']")
                 td(class="res_entry-title clickable") {{res.toolName}}
                 td {{res.compressionRate}}
                 td {{ res.time }}
-                td {{ res.type.charAt(0).toUpperCase() + res.type.slice(1) }}
+                td {{ formatType(res.type) }}
                 td(class="code-preview")
                     textarea {{ res.code }}
 
@@ -34,12 +34,16 @@ div(id="result-overview")
         },
         computed: {
             sortedResults: function() {
-                console.log("getting sorted result");
                 let sortByName = (a, b) => {
                     return a.toolName < b.toolName;
                 };
                 let sortedResults = this.results['obfuscator'].sort(sortByName);
                 return sortedResults.concat(this.results['deobfuscator'].sort(sortByName));
+            }
+        },
+        methods: {
+            formatType(type) {
+                return type.charAt(0).toUpperCase() + type.slice(1);
             }
         }
     }

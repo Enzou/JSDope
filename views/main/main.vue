@@ -20,16 +20,17 @@ div(id="app")
 
 <script>
     async function process() {
-        let processTools = async function(tools) {
+        let processTools = async function(tools, code = this.sampleCode, callbackFn = (res, tool) => { console.warn('no operation specified!') }) {
             for (let tId in tools) {
                 if (tools.hasOwnProperty(tId)) {
                     let tool = tools[tId];
                     if (tool.isSelected) {
                         try {
                             let cmd = (tool.type === "obfuscator"  ? "obfuscate" : "deobfuscate");
-                            let res = await makeRequest("/process", "POST", {id: tId, code: this.sampleCode, options: tool.options, cmd: cmd});
-                            this.showResults(res, tool);
-                            console.log(' --- show result ');
+                            let res = await makeRequest("/process", "POST", {id: tId, code: code, options: tool.options, cmd: cmd});
+
+                            console.dir(res);
+                            callbackFn(res, tool);
                         } catch (exc) {
                             console.error("Couldn't process request: " + exc.message);
                         }
@@ -44,12 +45,18 @@ div(id="app")
             deobfuscator: [],
             count: 0
         };
+
         try {
             if (this.isCrossProcess) {
+                let callDeobfs = async function(res, tool) {
+                    debugger;
+                    await processTools(this.deobfuscators, res.code, this.showResults);
+                };
 
+                await processTools(this.obfuscators, this.sampleCode, callDeobfs);
             } else {    // use same sample for each tool
-                await processTools.call(this, this.deobfuscators);
-                await processTools.call(this, this.obfuscators);
+                await processTools(this.obfuscators, this.sampleCode, this.showResults);
+                await processTools(this.deobfuscators, this.sampleCode, this.showResults);
             }
 
         } catch (exc) {
@@ -89,15 +96,17 @@ div(id="app")
                 }
             },
             showResults (res, tool) {
-                if (res.code) {
-                    res.id = (tool.type === "obfuscator" ? tool.id : tool.id + 9000);       // use id as key for sorting and list obfuscator results first
+                res.id = (tool.type === "obfuscator" ? tool.id : tool.id + 9000);       // use id as key for sorting and list obfuscator results first
 
-                    res.toolName = tool.name;
-                    res.type = tool.type;
+                res.toolName = tool.name;
+                res.type = tool.type;
 
-                    this.results[tool.type].push(res);
-                    this.results.count++;
+                if (!res.code) {
+                    res.failed = true;
                 }
+
+                this.results[tool.type].push(res);
+                this.results.count++;
             },
         },
 };
