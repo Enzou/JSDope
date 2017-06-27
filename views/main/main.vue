@@ -8,7 +8,7 @@ div(id="app")
 
     sample-selector(:samples="samples" @sample-changed="onSampleChanged")
 
-    input(id="btn-process" type='button' value='Process' class="btn primary-btn" @click="process")
+    input(id="btn-process" type='button' value='Process' class="btn primary-btn" @click="process" :disabled="!readyToProcess")
 
     template(v-if="canCrossProcess")
         label(title="Use the result of every obfuscation as input for every deobfuscator")
@@ -48,12 +48,11 @@ div(id="app")
 
         try {
             if (this.isCrossProcess) {
-                let callDeobfs = async function(res, tool) {
-                    debugger;
-                    await processTools(this.deobfuscators, res.code, this.showResults);
+                let callDeobfs = async function(deobfs, showResFn, res, tool) {
+                    await processTools(deobfs, encodeURIComponent(res.code), showResFn);
                 };
 
-                await processTools(this.obfuscators, this.sampleCode, callDeobfs);
+                await processTools(this.obfuscators, this.sampleCode, callDeobfs.bind(this, this.deobfuscators, this.showResults));
             } else {    // use same sample for each tool
                 await processTools(this.obfuscators, this.sampleCode, this.showResults);
                 await processTools(this.deobfuscators, this.sampleCode, this.showResults);
@@ -73,19 +72,18 @@ div(id="app")
             }
         },
         computed: {
+            readyToProcess() {
+                return this.sampleCode && (this.countSelected(this.obfuscators) || this.countSelected(this.deobfuscators));
+            },
             canCrossProcess() {
-                let isSelected = (tool) => {
-                    return tool.isSelected
-                };
-
-                let obfSel = Object.values(this.obfuscators).some(isSelected);
-                let deobfSel = Object.values(this.deobfuscators).some(isSelected);
-
-                return obfSel && deobfSel;
+                return this.countSelected(this.obfuscators) && this.countSelected(this.deobfuscators);
             }
         },
         methods: {
             process: process,
+            countSelected(tools) {
+                return Object.values(tools).some((tools) => { return tools.isSelected });
+            },
             onSampleChanged: function(sample) {
                 if (Number.isInteger(sample)) { // sample Id means the whole sample is used
                     this.sampleCode = this.samples[sample].content;

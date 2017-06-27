@@ -159,4 +159,8 @@ textarea {
 
 #btn-process {
   margin-right: $big-gap;
+
+  &:disabled {
+    background-color: gray;
+  }
 }

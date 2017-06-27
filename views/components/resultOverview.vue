@@ -4,22 +4,28 @@ div(id="result-overview")
 
     result-detail(v-if="results.count === 1" :result="sortedResults[0]")
 
-    table(v-else-if="results.count > 1" class="result-table")
-        thead
-            tr
-                th Tool
-                th Compression rate
-                th Processing time
-                th Type
-                th Preview
-        tbody
-            tr(v-for="res in sortedResults" :key="res.id" v-bind:class="[{failed: res.failed}, 'result-entry']")
-                td(class="res_entry-title clickable") {{res.toolName}}
-                td {{res.compressionRate}}
-                td {{ res.time }}
-                td {{ formatType(res.type) }}
-                td(class="code-preview")
-                    textarea {{ res.code }}
+    template(v-else-if="results.count > 1")
+        table(v-if="!isCrossProcessed" class="result-table")
+            thead
+                tr
+                    th Tool
+                    th Compression rate
+                    th Processing time
+                    th Type
+                    th Preview
+            tbody
+                tr(v-for="res in sortedResults" :key="res.id" v-bind:class="[{failed: res.failed}, 'result-entry']")
+                    td(class="res_entry-title clickable") {{res.toolName}}
+                    td {{res.compressionRate}}
+                    td {{ res.time }}
+                    td {{ formatType(res.type) }}
+                    td(class="code-preview")
+                        textarea {{ res.code }}
+
+        div(class="")
+            p Overview
+            div(class="" v-for="res in results")
+                h4
 
     div(v-else="") No results
 </template>
