@@ -15,7 +15,7 @@ div(id="app")
             input(type="checkbox" v-model="isCrossProcess")
             | Process every obfuscator output as deobfuscator input
 
-    result-overview(v-if="results && results.count > 0" id="result_area" :results="results" is-cross-processed="isCrossProcess")
+    result-overview(v-if="results && results.length > 0" id="result_area" :results="results" :is-cross-processed="isCrossProcess")
 </template>
 
 <script>
@@ -40,11 +40,7 @@ div(id="app")
         };
 
         // clear previous results
-        this.results = {
-            obfuscator: [],
-            deobfuscator: [],
-            count: 0
-        };
+        this.results = [];
 
         try {
             if (this.isCrossProcess) {
@@ -67,7 +63,7 @@ div(id="app")
         data() {
             return {
                 sampleCode: "",
-                results: { count: 0 },
+                results: [],
                 isCrossProcess: false
             }
         },
@@ -78,6 +74,9 @@ div(id="app")
             canCrossProcess() {
                 return this.countSelected(this.obfuscators) && this.countSelected(this.deobfuscators);
             }
+        },
+        created() {
+            console.log("isCrossProcessed: " + (this.isCrossProcessed ? "true" : "false"));
         },
         methods: {
             process: process,
@@ -103,8 +102,7 @@ div(id="app")
                     res.failed = true;
                 }
 
-                this.results[tool.type].push(res);
-                this.results.count++;
+                this.results.push(res);
             },
         },
 };
