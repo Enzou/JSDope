@@ -1,6 +1,6 @@
 <template lang="pug">
 div(class="result-detail")
-    h4 {{result.toolName}}
+    h4(v-if="showName") {{result.toolName}}
     textarea(class="resulting_code" ref="code-area") {{ result.code}}
 
     label(for="compression") Compression rate:
@@ -13,12 +13,7 @@ div(class="result-detail")
 
 <script>
     export default {
-        props: ['result'],
-        watch: {
-            'result': function(val, oldVal) {
-                debugger;
-            }
-        },
+        props: ['result', 'showName'],
         methods: {
             resize: function(el) {
                 el.style.height = "5px";

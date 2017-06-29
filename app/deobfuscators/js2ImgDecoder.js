@@ -52,9 +52,8 @@ async function process(str) {
         code = decode(str) || "";
         compressionRate =  str.length + "/" + code.length + " = " + (str.length / code.length).toFixed(2);
 
-
     } catch (exc) {
-        console.warn("Couldn't decode JavaScript2img string: " + exc);
+        console.warn("[JS2img] Couldn't decode string: " + exc);
     }
 
     return {

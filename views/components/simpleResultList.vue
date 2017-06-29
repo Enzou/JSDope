@@ -9,7 +9,7 @@ table(class="result-table")
             th Preview
     tbody
         tr(v-for="res in sortedResults" :key="res.id" v-bind:class="[{failed: res.failed}, 'result-entry']")
-            td(class="res_entry-title clickable") {{res.toolName}}
+            td(class="res_entry-title clickable" @click="onResultClicked(res)") {{res.toolName}}
             td {{ res.compressionRate }}
             td {{ res.time }}
             td {{ formatType(res.type) }}
@@ -24,7 +24,7 @@ table(class="result-table")
         computed: {
             sortedResults: function() {
                 let sortByName = (a, b) => {
-                    return a.toolName > b.toolName;
+                    return a.toolName > b.toolName
                 };
 
                 let sortedRes = this.results.sort(sortByName);
@@ -42,6 +42,9 @@ table(class="result-table")
         methods: {
             formatType(type) {
                 return type.charAt(0).toUpperCase() + type.slice(1);
+            },
+            onResultClicked(result) {
+                this.$emit('result-clicked', result);
             }
         }
     }

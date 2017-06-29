@@ -319,7 +319,7 @@ function decode(encStr) {
             }
         }
 
-        console.warn("no match : "+data);
+        console.warn("[jjDecode] no match : " + data);
         break;
     }
 

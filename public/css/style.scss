@@ -65,6 +65,7 @@ textarea {
 
 .primary-btn {
   background-color: $primary-color;
+  color: $bg-color;
 }
 
 .btn, .btn:hover {
@@ -107,7 +108,7 @@ textarea {
   display: block;
   width: 100%;
   max-height: 350px;
-  margin: auto;
+  margin: auto auto 10px auto;
   border-radius: 5px;
   padding: $small-gap;
 
@@ -165,5 +166,10 @@ textarea {
   }
 }
 
+
+.modal-container {
+  background-color: $bg-color;
+  color: $font-color;
+}
 
 //@import 'toolSelector';
