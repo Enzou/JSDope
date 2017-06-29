@@ -1,18 +1,15 @@
 <template lang="pug">
-div(class="tool-selector selector-container framed")
-    h3 Select {{toolTitle}}
-    div(class="tool-list-container list-container")
-        ul(v-if="tools " v-bind:id="prefix + '_list'" class="tool-list")
-            li(v-for="t in tools")
-                label
-                    input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" v-model="t.isSelected")
-                    | {{t.name}}
+div(class="tool-selector framed")
+    div(class="table-row header")
+        h3(class="col1 name-header") Select {{toolTitle}}
+        h4(class="col2 details-header") Options
 
-        p(v-else) No data available
-
-    div(class="options-box detail-container")
-        h4 Options
-        div(class="tool_options" v-for="(t, k) in tools" v-if="t.isSelected")
+    div(v-for="t in tools" class="table-row")
+        div(class="col1 tool-name")
+            label
+                input(type="checkbox" v-bind:name="prefix + '_sel'" v-bind:id="prefix + '_' + t.id" v-model="t.isSelected")
+                | {{t.name}}
+        div(class="col2 tool-options" v-if="t.isSelected")
             template(v-for="(o, k) in t.options")
                 label {{ optionDescr[t.id][k].text }}:
                     select(v-if="getType(t.id, k) === 'selection'" v-model="tools[t.id].options[k]._selected")
@@ -21,6 +18,8 @@ div(class="tool-selector selector-container framed")
                     input(v-else-if="getType(t.id, k) === 'text'" type="text" v-model="tools[t.id].options[k]")
                     span(v-else="") Invalid option type for option: {{ o }}
                 br
+
+    div(v-if="!tools" class="table-row") No data available
 </template>
 
 
@@ -101,13 +100,32 @@ div(class="tool-selector selector-container framed")
 </script>
 
 <style>
-    .tool-selector .list-container {
+    .tool-selector .table-row .col1 {
         flex: 2 0;
     }
 
-    .tool-selector .options-box {
+    .tool-selector .table-row .col2 {
         flex: 3 0;
-        margin-top: -35px;
+    }
+
+    .tool-selector .table-row.header .details-header {
+        margin-top: 25px;
+    }
+
+    .table-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    .tool-selector .header h3, .tool-selector .header h4 {
+        font-weight: bold;
+    }
+
+    .tool-selector .tool-options {
+        margin-bottom: 15px;
     }
 
     .tool-selector .options-box h4 {
