@@ -70,7 +70,7 @@ div(id="app")
             return {
                 sampleCode: "",
                 results: [],
-                isCrossProcess: true
+                isCrossProcess: false
             }
         },
         computed: {
@@ -80,9 +80,6 @@ div(id="app")
             canCrossProcess() {
                 return this.countSelected(this.obfuscators) && this.countSelected(this.deobfuscators);
             }
-        },
-        created() {
-            this.isCrossProcess = Object.values(this.obfuscators).length > 0 && Object.values(this.deobfuscators).length > 0;
         },
         methods: {
             process: process,

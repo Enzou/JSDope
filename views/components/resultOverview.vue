@@ -8,16 +8,17 @@ div(id="result-overview")
         template(v-if="isCrossProcessed")
             h4 Obfuscators
             //- complex layout to display obfuscatoOr results first and then show deobfuscation results per obfuscator
-            simple-result-list(:results="obfuscatorResults" :hidetype="true" @result-clicked="onResultClicked")
+            simple-result-list(:results="obfuscatorResults" :hidetype="true" :show-all="showAll" @result-clicked="onResultClicked")
 
             br
             h4 Deobfuscations per obfuscator
             div(class="")
                 div(class="" v-for="(res, k) in groupedDeobfuscators")
                     h4 {{k}}
-                    simple-result-list(:results="res" :hidetype="true" @result-clicked="onResultClicked")
+                    simple-result-list(:results="res" :hidetype="true" :show-all="showAll" @result-clicked="onResultClicked")
+
         //- simple layout treating obfuscator and deobfuscator equally
-        simple-result-list(v-else="" :results="results" @result-clicked="onResultClicked")
+        simple-result-list(v-else="" :results="results" :show-all="showAll" @result-clicked="onResultClicked")
 
         modal(v-if="showModal")
             h3(slot="header") {{ selectedResult.toolName }}
@@ -25,6 +26,11 @@ div(id="result-overview")
             div(slot="footer")
                 button(class="btn primary-btn" @click="toggleModal(false)")
                     | Close
+
+        label(id="show-all-results")
+            input(type="checkbox" v-model="showAll")
+            | Show all results
+
 
     div(v-else="") No results
 </template>
@@ -36,7 +42,8 @@ div(id="result-overview")
         data() {
             return {
                 selectedResult: null,
-                showModal: false
+                showModal: false,
+                showAll: true
             }
         },
         computed: {

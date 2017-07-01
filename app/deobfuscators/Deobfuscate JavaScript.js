@@ -1333,20 +1333,15 @@ function deobfuscate(code) {
 
 async function process(obfCode) {
     let code = "";
-    let time = "-";
-    let compressionRate = "-";
 
     try {
         code = deobfuscate(obfCode) || obfCode;
-        compressionRate =  obfCode.length + "/" + code.length + " = " + (obfCode.length / code.length).toFixed(2);
     } catch (exc) {
         console.warn("[Deobfuscate JavaScript] Couldn't decode string: " + exc);
     }
 
     return {
         code: code,
-        time: time,
-        compressionRate: compressionRate
     };
 }
 

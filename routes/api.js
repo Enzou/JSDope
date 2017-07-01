@@ -37,7 +37,7 @@ function normalizeResult(result, params, startTime) {
 
     // calculate processing duration
     if (!result.hasOwnProperty('time') || !result.time) {
-        let t = process.hrtime(t);      // time difference in the format [seconds, nanoseconds]
+        let t = process.hrtime(startTime);      // time difference in the format [seconds, nanoseconds]
         result['time'] = t[0] + t[1] / 1000000000.;
     }
 }
