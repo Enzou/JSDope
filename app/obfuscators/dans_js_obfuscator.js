@@ -45,7 +45,7 @@ function parseResult(htmlResponse) {
                     let idx = el.data.indexOf(":");
                     compression = el.data.substr(idx + 1).trim();
                 } else if(el.data.includes("Performed")) {  // time information
-                    time = el.data.replace("Performed in", "").trim().slice(0, -1);
+                    time = el.data.replace("Performed in", "").trim().slice(0, -3); // slice: remove ' s.' from the end
                 }
             }
         });

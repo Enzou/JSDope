@@ -8,15 +8,16 @@ div(id="result-overview")
         template(v-if="isCrossProcessed")
             h4 Obfuscators
             //- complex layout to display obfuscatoOr results first and then show deobfuscation results per obfuscator
-            simple-result-list(:results="obfuscatorResults" @result-clicked="onResultClicked")
+            simple-result-list(:results="obfuscatorResults" :hidetype="true" @result-clicked="onResultClicked")
 
             br
             h4 Deobfuscations per obfuscator
             div(class="")
-                div(class="" v-for="res in results")
-                    h4 {{res.toolName}}
-
-        simple-result-list(v-else="" :results="results")
+                div(class="" v-for="(res, k) in groupedDeobfuscators")
+                    h4 {{k}}
+                    simple-result-list(:results="res" :hidetype="true" @result-clicked="onResultClicked")
+        //- simple layout treating obfuscator and deobfuscator equally
+        simple-result-list(v-else="" :results="results" @result-clicked="onResultClicked")
 
         modal(v-if="showModal")
             h3(slot="header") {{ selectedResult.toolName }}
@@ -38,16 +39,25 @@ div(id="result-overview")
                 showModal: false
             }
         },
-        created() {
-            console.log("results: ");
-            console.dir(this.results);
-        },
         computed: {
             obfuscatorResults() {
                 return this.results.filter((r) => { return r.type === 'obfuscator'});
             },
             groupedDeobfuscators() {
+                let groupedRes = this.results.reduce((grp, r) => {
+                    if (r.type === 'deobfuscator' && r.hasOwnProperty('resultFor')) {
+                        let obf = r['resultFor'];
+                        (grp[obf.name] = grp[obf.name] || []).push(r);
+                    }
+                    return grp;
+                }, {});
 
+                console.group("calculating deobfuscator groups");
+                console.dir(this.results);
+                console.dir(groupedRes);
+                console.groupEnd();
+
+                return groupedRes;
             }
         },
         methods: {

@@ -12,7 +12,7 @@ div(id="app")
 
     template()
         label(title="Use the result of every obfuscation as input for every deobfuscator")
-            input(type="checkbox" v-model="isCrossProcess" :disabled="!canCrossProcess")
+            input(type="checkbox" v-model="isCrossProcess")
             | Process every obfuscator output as deobfuscator input
 
     result-overview(v-if="results && results.length > 0" id="result_area" :results="results" :is-cross-processed="isCrossProcess")
@@ -28,8 +28,6 @@ div(id="app")
                         try {
                             let cmd = (tool.type === "obfuscator"  ? "obfuscate" : "deobfuscate");
                             let res = await makeRequest("/process", "POST", {id: tId, code: code, options: tool.options, cmd: cmd});
-
-                            console.dir(res);
                             callbackFn(res, tool);
                         } catch (exc) {
                             console.error("Couldn't process request: " + exc.message);
@@ -58,9 +56,8 @@ div(id="app")
 
                 await processTools(this.obfuscators, this.sampleCode, callDeobfs.bind(this, this.deobfuscators, this.showResults));
             } else {    // use same sample for each tool
-                let tools = this.obfuscators.concat(this.deobfuscators);
-                await processTools(tools, this.sampleCode, this.showResults);
-//                await processTools(this.deobfuscators, this.sampleCode, this.showResults);
+                await processTools(this.obfuscators, this.sampleCode, this.showResults);
+                await processTools(this.deobfuscators, this.sampleCode, this.showResults);
             }
 
         } catch (exc) {
@@ -83,6 +80,9 @@ div(id="app")
             canCrossProcess() {
                 return this.countSelected(this.obfuscators) && this.countSelected(this.deobfuscators);
             }
+        },
+        created() {
+            this.isCrossProcess = Object.values(this.obfuscators).length > 0 && Object.values(this.deobfuscators).length > 0;
         },
         methods: {
             process: process,

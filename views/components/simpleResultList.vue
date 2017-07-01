@@ -3,16 +3,16 @@ table(class="result-table")
     thead
         tr
             th Tool
+            th(v-if="!hidetype") Type
             th Compression rate
             th Processing time
-            th Type
             th Preview
     tbody
         tr(v-for="res in sortedResults" :key="res.id" v-bind:class="[{failed: res.failed}, 'result-entry']")
             td(class="res_entry-title clickable" @click="onResultClicked(res)") {{res.toolName}}
+            td(v-if="!hidetype") {{ formatType(res.type) }}
             td {{ res.compressionRate }}
             td {{ res.time }}
-            td {{ formatType(res.type) }}
             td(class="code-preview")
                 textarea {{ res.code }}
 </template>
@@ -20,7 +20,7 @@ table(class="result-table")
 
 <script>
     export default {
-        props: ['results'],
+        props: ['results', 'hidetype'],
         computed: {
             sortedResults: function() {
                 let sortByName = (a, b) => {

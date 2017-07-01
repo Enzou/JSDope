@@ -1,6 +1,13 @@
-let jsObfuscator = require('javascript-obfuscator');
+/**
+ * Wrapper for the JavaScript obfuscator for Node.js
+ * Github: https://github.com/javascript-obfuscator/javascript-obfuscator
+ */
 
+const jsObfuscator = require('javascript-obfuscator');
 
+/**
+ * an object with all the possible options for the obfuscation
+ */
 let toolOptions = {
     compact: true,
     controlFlowFlattening: false,
@@ -26,14 +33,46 @@ let toolOptions = {
 };
 
 
-async function process(code, options = {}) {
-    // TODO validate options
-    let result = jsObfuscator.obfuscate(code, options);
+/**
+ * Check types of each option and parse it if necessary.
+ * The passed object can be modified in the process.
+ * @param {Object} options - The dictionary with all provided options for the obfuscation
+ */
+function validateOptions(options) {
+    const numProps = ['controlFlowFlatteningThreshold', 'deadCodeInjectionThreshold', 'stringArrayThreshold'];
+
+    for (let prop of numProps) {
+        if (options.hasOwnProperty(prop) && typeof(options[prop]) === 'string') {
+            options[prop] = parseFloat(options[prop]);
+        }
+    }
+}
+
+/**
+ * Process the given code with the provided parameters
+ * @param {string} code - The samplecode which shall be processed
+ * @param {Object} options - The dictionary with all provided options for the obfuscation
+ * @returns {Promise.<{code, compressionRate: *, time}>} a promise of an object with the result of the operation
+ */
+async function obfuscate(code, options = {}) {
+    validateOptions(options);
+
+    let result = "";
+    let time = 0;
+    try {
+        let t = process.hrtime();
+        result = jsObfuscator.obfuscate(code, options);
+        t = process.hrtime(t);      // time difference in the format [seconds, nanoseconds]
+        time = t[0] + t[1] / 1000000000.;
+
+        result = result.getObfuscatedCode();
+    } catch (exc) {
+        console.warn("[Node Obfuscator] Couldn't obfuscate sample: " + exc);
+    }
 
     return {
-        code: result.code,
-        compressionRate: result.compressionRate,
-        time: result.time
+        code: result,
+        time: time
     }
 }
 
@@ -41,5 +80,5 @@ async function process(code, options = {}) {
 module.exports = {
     name: "JavaScript obfuscator for Node.js",
     options: toolOptions,
-    process: process,
+    process: obfuscate,
 };

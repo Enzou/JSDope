@@ -45,21 +45,16 @@ function decode(str) {
 
 async function process(str) {
     let code = "";
-    let compressionRate = "-";
-    let time = "-";
 
     try {
         code = decode(str) || "";
-        compressionRate =  str.length + "/" + code.length + " = " + (str.length / code.length).toFixed(2);
-
+        // compressionRate =  str.length + "/" + code.length + " = " + (str.length / code.length).toFixed(2);
     } catch (exc) {
         console.warn("[JS2img] Couldn't decode string: " + exc);
     }
 
     return {
         code: code,
-        time: time,
-        compressionRate: compressionRate
     };
 }
 
