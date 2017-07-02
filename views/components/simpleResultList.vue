@@ -13,8 +13,8 @@ table(class="result-table")
             td(v-if="!hidetype") {{ formatType(res.type) }}
             td {{ res.compressionRate }}
             td {{ res.time }}
-            td(class="code-preview")
-                textarea {{ res.code }}
+            td(class="code-preview clickable" @click="onResultClicked(res)")
+                p {{ res.code }}
 </template>
 
 

@@ -24,6 +24,8 @@ div(id="result-overview")
             h3(slot="header") {{ selectedResult.toolName }}
             result-detail(slot="body" :result="selectedResult" :show-name="false")
             div(slot="footer")
+                button(class="btn primary-btn" @click="useSample()")
+                    | Use as sample
                 button(class="btn primary-btn" @click="toggleModal(false)")
                     | Close
 
@@ -38,6 +40,9 @@ div(id="result-overview")
 
 <script>
     export default {
+        // TODO remove binding for isCrossProcessed (otherwise the view will be updated when clicking in main.vue)
+        // TODO add option to use resulting code as new input
+
         props: ['results', 'isCrossProcessed'],
         data() {
             return {
@@ -59,11 +64,6 @@ div(id="result-overview")
                     return grp;
                 }, {});
 
-                console.group("calculating deobfuscator groups");
-                console.dir(this.results);
-                console.dir(groupedRes);
-                console.groupEnd();
-
                 return groupedRes;
             }
         },
@@ -75,8 +75,9 @@ div(id="result-overview")
             toggleModal(show) {
                 this.showModal = show;
             },
-            getFilteredResults(pred) {
-                return this.results.filter(pred);
+            useSample() {
+                this.$emit('sample-changed', this.selectedResult.code);
+                this.toggleModal(false);
             }
         }
     }

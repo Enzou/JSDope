@@ -37,6 +37,10 @@ div(class="sample-selector selector-container")
 
                 this.$emit('sample-changed', this.selectedId);
             },
+            setSample: function(sample) {
+                this.sampleCode = sample;
+                this.onCodeChanged();
+            },
             onCodeChanged: function() {
                 this.selectedId = -1;
                 this.$emit('sample-changed', this.sampleCode);

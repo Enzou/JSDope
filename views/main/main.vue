@@ -6,7 +6,7 @@ div(id="app")
     tool-selector(:tools="obfuscators" :tool-title="'Obfuscators'" :prefix="'obf'")
     tool-selector(:tools="deobfuscators" :tool-title="'Deobfuscators'" :prefix="'deobf'")
 
-    sample-selector(:samples="samples" @sample-changed="onSampleChanged")
+    sample-selector(ref="sampleSelector" :samples="samples" @sample-changed="onSampleChanged")
 
     input(id="btn-process" type='button' value='Process' class="btn primary-btn" @click="process" :disabled="!readyToProcess")
 
@@ -15,7 +15,7 @@ div(id="app")
             input(type="checkbox" v-model="isCrossProcess")
             | Process every obfuscator output as deobfuscator input
 
-    result-overview(v-if="results && results.length > 0" id="result_area" :results="results" :is-cross-processed="isCrossProcess")
+    result-overview(v-if="results && results.length > 0" id="result_area" :results="results" :is-cross-processed="isCrossProcess" @sample-changed="updateSampleCode")
 </template>
 
 <script>
@@ -86,6 +86,9 @@ div(id="app")
             countSelected(tools) {
                 return Object.values(tools).some((t) => { return t.isSelected });
             },
+            /**
+             *
+             */
             onSampleChanged: function(sample) {
                 if (Number.isInteger(sample)) { // sample Id means the whole sample is used
                     this.sampleCode = this.samples[sample].content;
@@ -93,6 +96,16 @@ div(id="app")
                     this.sampleCode = sample;
                 } else {
                     console.error("Received invalid sample in event: " + JSON.stringify(sample));
+                }
+            },
+            /**
+             * Update the sample code in the sample selector
+             * @param {string} sampleCode - the new code which should be 'selected'
+             */
+            updateSampleCode(sampleCode) {
+                let selector = this.$refs.sampleSelector; // get reference to the sample-selector component
+                if (selector) {
+                    selector.setSample(sampleCode);
                 }
             },
             showResults (res, tool) {
