@@ -1,32 +1,27 @@
 const express = require('express');
 const path = require('path');
-// const favicon = require('serve-favicon');
 const logger = require('morgan');
-// const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const sassMiddleware = require('node-sass-middleware');
-const expressVue = require('express-vue');
+const bodyParser = require('body-parser');                   // parse http queries
+const sassMiddleware = require('node-sass-middleware');     // parse scss styles before serving them
+const expressVue = require('express-vue');      // use vue with server side rendering
 
+// load the allowed routes for the front-end
 const index = require('./routes/index');
 const api = require('./routes/api');
 
 const app = express();
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views_p'));
 app.set('vue', {
     componentsDir: path.join(__dirname, 'views', 'components'),
     defaultLayout: 'layout'
 });
 app.engine('vue', expressVue);
 app.set('view engine', 'vue');
-// app.set('view engine', 'pug');
 
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json({limit: '1mb'}));     // parse the body of requests for easier // processing
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
-// app.use(cookieParser());
 app.use(sassMiddleware({
     src: path.join(__dirname, 'public'),
     dest: path.join(__dirname, 'public'),
@@ -36,6 +31,7 @@ app.use(sassMiddleware({
     debug: true
 }));
 
+// declare all files in the public folders as content for the front-end
 app.use(express.static(path.join(__dirname, 'public')));
 
 // setup routes to the different pages

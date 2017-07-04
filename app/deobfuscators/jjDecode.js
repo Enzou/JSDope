@@ -2,8 +2,13 @@
  * Original by Jacob Soo: https://github.com/jacobsoo/Decoder-JJEncode
  */
 
+/** Helper Class for managing string substitutions during the decoding process */
 class LOTUChecker{
 
+    /**
+     * Create a new checker instance by determining all the substitution strings.
+     * @param {string} gv - the gv parameter determined by the checkPalindrome function
+     */
     constructor(gv) {
         this.str_l = "(![]+\"\")[" + gv + "._$_]+";
         this.str_o = gv + "._$+";
@@ -11,6 +16,11 @@ class LOTUChecker{
         this.str_u = gv + "._+";
     }
 
+    /**
+     * Check for necessary substitution and if so update the sample code, which is being decoded
+     * @param {string} data - sample code being currently processed
+     * @returns {{ch: string, newData: *}} Object with the found substitution-string and the updated sample code
+     */
     check(data) {
         let ch_lotux = '';
         let newData = null;
@@ -37,6 +47,11 @@ class LOTUChecker{
 }
 
 
+/**
+ * Decode the given string. The whole source is taken from the github-repository of Jacob Soo
+ * @param {string} encStr - The code which should be deobfuscated
+ * @returns {string} - result after the decoding process
+ */
 function decode(encStr) {
     // clean string
     encStr = encStr.replace(/^\s+|\s+$/g, "");
@@ -326,6 +341,11 @@ function decode(encStr) {
     return res;
 }
 
+/**
+ * Helper function to check whether palindrom feature of JJEncode was used
+ * @param {string} str - sample code which should be decoeded
+ * @returns {{startPos: *, endPos: *, gv: *, gvl: *}} - object with the determined parameters for the decoding process
+ */
 function checkPalindrome(str) {
     let startPos;
     let endPos;
@@ -353,6 +373,12 @@ function checkPalindrome(str) {
     return { startPos, endPos, gv, gvl };
 }
 
+
+/**
+ * Deobfuscate the given code by applying the reversal of JJEncode
+ * @param {string} str - The samplecode which shall be processed
+ * @returns {Promise.<{code}>} a promise of an object containing the resulting code of the operation
+ */
 async function processSample(str) {
     let code = "";
 

@@ -6,7 +6,7 @@
 const jsObfuscator = require('javascript-obfuscator');
 
 /**
- * an object with all the possible options for the obfuscation
+ * a dictionary of all the possible options. This data structure serves as template for available options on the front-end
  */
 let toolOptions = {
     compact: true,
@@ -52,7 +52,7 @@ function validateOptions(options) {
  * Process the given code with the provided parameters
  * @param {string} code - The samplecode which shall be processed
  * @param {Object} options - The dictionary with all provided options for the obfuscation
- * @returns {Promise.<{code, compressionRate: *, time}>} a promise of an object with the result of the operation
+ * @returns {Promise.<{code, time}>} a promise of an object with the result of the operation
  */
 async function obfuscate(code, options = {}) {
     validateOptions(options);

@@ -6,7 +6,7 @@ const router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.render('main/main', {
-        data: {
+        data: { // initial data for the front-end
             title: 'JSDope',
             obfuscators: app.tools.obfuscators,
             deobfuscators: app.tools.deobfuscators,
@@ -15,11 +15,8 @@ router.get('/', function(req, res, next) {
         vue: {
             head: {
                 title: 'JSDope',
-                head: [
-                    {property: 'og:title', content: 'Page Title'},
-                    {name: 'twitter:title', content: 'Page Title'},
-                ]
             },
+            // list of all the used components in the front-end. These names are the same es the vue-files in the configured components folders
             components: ['toolSelector', 'sampleSelector', 'resultOverview', 'resultDetail', 'simpleResultList', 'modal']
         }
     });

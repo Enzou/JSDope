@@ -53,8 +53,8 @@
 
  */
 
-
-
+// The whole source code for the deobfuscation is copied from the website and not modified. Thus no further documentation is provided
+// Source: http://deobfuscatejavascript.com/deobfuscate.js
 function js_beautify(js_source_text, options) {
 
     var input, output, token_text, last_type, last_text, last_last_text, last_word, flags, flag_store, indent_string;
@@ -1320,6 +1320,12 @@ createElement = report;
 document.createElement = report;
 appendChild = report;
 
+
+/**
+ * Deobfuscate the given code
+ * @param {string} code - the sample code which should be deobfuscated
+ * @returns {string} the resulting code
+ */
 function deobfuscate(code) {
     try {
         return DEOBEVILJS(code);
@@ -1331,6 +1337,12 @@ function deobfuscate(code) {
     }
 }
 
+
+/**
+ * Process the given code with the provided parameters
+ * @param {string} obfCode - The samplecode which shall be processed
+ * @returns {Promise.<{code}>} a promise of an object containing the resulting code of the operation
+ */
 async function process(obfCode) {
     let code = "";
 
@@ -1349,4 +1361,4 @@ async function process(obfCode) {
 module.exports = {
     name: 'Deobfuscate JavaScript',
     process: process,
-}
+};

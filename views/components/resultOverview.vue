@@ -41,7 +41,6 @@ div(id="result-overview")
 <script>
     export default {
         // TODO remove binding for isCrossProcessed (otherwise the view will be updated when clicking in main.vue)
-        // TODO add option to use resulting code as new input
 
         props: ['results', 'isCrossProcessed'],
         data() {

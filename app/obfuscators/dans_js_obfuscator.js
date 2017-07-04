@@ -3,6 +3,7 @@ const request = require('request-promise-native');
 const cheerio = require('cheerio');
 
 
+// a dictionary of all the possible options. This data structure serves as template for available options on the front-end
 let toolOptions = {
     encodings: {        // values for the encoding types are read from the website
         'None': "0",
@@ -16,11 +17,16 @@ let toolOptions = {
 };
 
 
+/**
+ * Send the request with the given parameters to the website of Dans Tools
+ * @param {Object} params - dictionary with code and parameters used for the obfuscation
+ * @returns {Promise} a promise of the returned result. The data is properly transformed before it is returned.
+ */
 function send_request(params) {
     let options = {
         url: 'http://www.danstools.com/javascript-obfuscate/index.php',
         method: 'POST',
-        transform: parseResult,
+        transform: parseResult,   // apply parseResult as transformation function before returning the response
         form: params
     };
 
@@ -29,6 +35,11 @@ function send_request(params) {
         // });
 }
 
+/**
+ * Transform the response from the request to extract all the relevant information
+ * @param {string} htmlResponse - the response from the website
+ * @returns {Object} object with the resulting code, the processing time and compression rate as returned from the website
+ */
 function parseResult(htmlResponse) {
     const $ = cheerio.load(htmlResponse);
 
@@ -58,6 +69,12 @@ function parseResult(htmlResponse) {
     };
 }
 
+/**
+ * Process the given code with the provided parameters
+ * @param {string} code - The samplecode which shall be processed
+ * @param {Object} options - The dictionary with all provided options for the obfuscation
+ * @returns {Promise.<{code, compressionRate, time}>} a promise of an object with the result of the operation
+ */
 async function process(code, options) {
     let params = {
         "ascii_encoding": toolOptions.encodings[options.encodings._selected],
@@ -85,5 +102,4 @@ module.exports = {
     name: "Dan's JavaScript Obfuscator",
     options: toolOptions,
     process: process,
-    // optionsTemplate: optionsTemplate.replace('\n', '')
 };
