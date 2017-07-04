@@ -19,6 +19,40 @@ div(id="app")
 </template>
 
 <script>
+    function makeRequest(path, method = "GET", args = {}) {
+        // wrap the AJAX request in a promise, so the caller can handle the
+        // response as he wishes
+
+        if (!path.startsWith('/api')) {
+            path = "/api" + path;
+        }
+
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // call the handle function if the request was a success
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        reject(xhr.responseText);
+                        console.warn('There was a problem with the request: ' + path);
+                    }
+                }
+            };
+
+            xhr.open(method, path);
+            // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(args));
+        });
+    }
+
+    /**
+     *
+     * @returns {Promise.<void>}
+     */
     async function process() {
         let processTools = async function(tools, code = this.sampleCode, callbackFn = (res, tool) => { console.warn('no operation specified!') }) {
             for (let tId in tools) {
@@ -27,7 +61,7 @@ div(id="app")
                     if (tool.isSelected) {
                         try {
                             let cmd = (tool.type === "obfuscator"  ? "obfuscate" : "deobfuscate");
-                            let res = await makeRequest("/process", "POST", {id: tId, code: code, options: tool.options, cmd: cmd});
+                            let res = await this.makeRequest("/process", "POST", {id: tId, code: code, options: tool.options, cmd: cmd});
                             callbackFn(res, tool);
                         } catch (exc) {
                             console.error("Couldn't process request: " + exc.message);
@@ -47,17 +81,17 @@ div(id="app")
                     showResFn(obfRes, obf);  // show result of the obfuscation as well
 
                     // call all the deobufscators on the output of the obfuscator
-                    await processTools(deobfs, encodeURIComponent(obfRes.code), (deobfRes, deobf) => {
+                    await processTools.call(this, deobfs, encodeURIComponent(obfRes.code), (deobfRes, deobf) => {
                         // link the deobfuscation result with the used obfuscator
                         deobfRes.resultFor = obf;
                         showResFn(deobfRes, deobf);
                     });
                 };
 
-                await processTools(this.obfuscators, this.sampleCode, callDeobfs.bind(this, this.deobfuscators, this.showResults));
+                await processTools.call(this, this.obfuscators, this.sampleCode, callDeobfs.bind(this, this.deobfuscators, this.showResults));
             } else {    // use same sample for each tool
-                await processTools(this.obfuscators, this.sampleCode, this.showResults);
-                await processTools(this.deobfuscators, this.sampleCode, this.showResults);
+                await processTools.call(this, this.obfuscators, this.sampleCode, this.showResults);
+                await processTools.call(this, this.deobfuscators, this.sampleCode, this.showResults);
             }
 
         } catch (exc) {
@@ -83,6 +117,7 @@ div(id="app")
         },
         methods: {
             process: process,
+            makeRequest: makeRequest,
             countSelected(tools) {
                 return Object.values(tools).some((t) => { return t.isSelected });
             },
