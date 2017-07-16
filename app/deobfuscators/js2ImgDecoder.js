@@ -50,17 +50,39 @@ function extractSnippets(str) {
 }
 
 /**
+ * Extract the array of 3 integers from the whole sample code
+ * @param {string} str - obfuscated code containing an array with the snippets;
+ * @returns {[number,number,number]} array with the extracted numbers
+ */
+function extractMagicNumbers(str) {
+    let start = str.indexOf('}];') + 3;  // find end of collection of functions
+    if (start < 3) {
+        throw new Error("Couldn't find beginning of numbers!");
+    }
+    start = str.indexOf('=[', start) + 2; // skip the variable name and go to beginning of the array
+    let end = str.indexOf('];', start);
+
+    let subStr = str.substring(start, end);
+
+    // extract and split the array
+    return subStr.split(',').map((s) => {
+        return parseInt(s, 10);
+    });
+}
+
+/**
  * Decode the obfuscated code by extracting the obfuscated snippets, interpreting the obfuscated target code as image and decoding everything.
  * @param {string} str - sample code which should be decoded.
  * @returns {string} the decoded sample code
  */
 function decode(str) {
     let snippets = extractSnippets(str);
+    let nums = extractMagicNumbers(str);
     // the 9th snippet contains the actual target code, all other snippets are helper blocks
     let imgBuffer = new Buffer(snippets[9], 'base64');
     let img = PNG.sync.read(imgBuffer);
 
-    return decodeRoutine(img.data, [0, 255, 2]);
+    return decodeRoutine(img.data, nums);
 }
 
 /**
