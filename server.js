@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');                   // parse http queries
-const sassMiddleware = require('node-sass-middleware');     // parse scss styles before serving them
+// const sassMiddleware = require('node-sass-middleware');     // parse scss styles before serving them
 const expressVue = require('express-vue');      // use vue with server side rendering
 
 // load the allowed routes for the front-end
@@ -22,14 +22,14 @@ app.set('view engine', 'vue');
 app.use(logger('dev'));
 app.use(bodyParser.json({limit: '1mb'}));     // parse the body of requests for easier // processing
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
-app.use(sassMiddleware({
-    src: path.join(__dirname, 'public'),
-    dest: path.join(__dirname, 'public'),
-    indentedSyntax: false, // true = .sass and false = .scss
-    prefix: 'css',
-    sourceMap: true,
-    debug: true
-}));
+// app.use(sassMiddleware({
+//     src: path.join(__dirname, 'public'),
+//     dest: path.join(__dirname, 'public'),
+//     indentedSyntax: false, // true = .sass and false = .scss
+//     prefix: 'css',
+//     sourceMap: true,
+//     debug: true
+// }));
 
 // declare all files in the public folders as content for the front-end
 app.use(express.static(path.join(__dirname, 'public')));
